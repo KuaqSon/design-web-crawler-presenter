@@ -327,6 +327,398 @@ layout: center
 class: text-center
 ---
 
+# Design Deep Dive
+
+Up until now, we have discussed the high-level design.
+
+Next, we will discuss the most important building components and techniques in depth
+
+---
+
+# Depth-first search (DFS) vs Breadth-first search (BFS)
+Design deep dive
+
+
+The **Depth–first search (DFS)** algorithm starts at the root of the tree (or some arbitrary node for a graph) and explored as far as possible along each branch before **backtracking**.
+
+The **Breadth–first search (BFS)** algorithm also starts at the root of the tree (or some arbitrary node of a graph), but unlike DFS, it explores the neighbor nodes first, before moving to the next-level neighbors. In other words, BFS explores vertices in the order of their distance from the source vertex, where distance is the minimum length of a path from the source vertex to the node.
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+</style>
+
+
+---
+
+# Depth-first search (DFS) vs Breadth-first search (BFS)
+
+<div>
+  <img
+    src="/dfs-bfs.png"
+  />
+</div>
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+
+div {
+  height: 95%;
+}
+
+img {
+  max-width: auto;
+  height: 100%;
+}
+</style>
+
+---
+
+# Depth-first search (DFS) vs Breadth-first search (BFS)
+
+<div>
+  <img
+    src="/hyperlink.png"
+  />
+</div>
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+
+div {
+  height: 95%;
+}
+
+img {
+  max-width: auto;
+  height: 100%;
+}
+</style>
+
+---
+
+# URL frontier
+Design deep dive
+
+
+A URL frontier is a data structure that stores URLs to be downloaded.
+
+The URL frontier is an important component to ensure:
+
+- Politeness
+- Priority
+- Freshness
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+</style>
+
+---
+
+# Politeness
+URL frontier
+
+<div>
+  <img
+    src="/politeness.png"
+  />
+</div>
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+
+div {
+  height: 95%;
+}
+
+img {
+  max-width: auto;
+  height: 100%;
+}
+</style>
+
+<!--
+• Queue router: It ensures that each queue (b1, b2, ... bn) only contains URLs from the same host.
+• Mapping table: It maps each host to a queue.
+• FIFO queues b1, b2 to bn: Each queue contains URLs from the same host.
+• Queue selector: Each worker thread is mapped to a FIFO queue, and it only downloads URLs from that queue. The queue selection logic is done by the Queue selector.
+• Worker thread 1 to N. A worker thread downloads web pages one by one from the same host. A delay can be added between two download tasks.
+ -->
+
+---
+
+# Priority
+URL frontier
+
+<div>
+  <img
+    src="/priority.png"
+  />
+</div>
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+
+div {
+  height: 95%;
+}
+
+img {
+  max-width: auto;
+  height: 100%;
+}
+</style>
+
+<!--
+
+• Prioritizer: It takes URLs as input and computes the priorities.
+• Queue f1 to fn: Each queue has an assigned priority. Queues with high priority are selected with higher probability.
+• Queue selector: Randomly choose a queue with a bias towards queues with higher priority.
+
+ -->
+
+
+---
+
+# Freshness
+URL frontier
+
+Web pages are constantly being added, deleted, and edited. A web crawler must periodically recrawl downloaded pages to keep our data set fresh. Recrawl all the URLs is time- consuming and resource intensive. Few strategies to optimize freshness are listed as follows:
+
+- Recrawl based on web pages update history.
+- Prioritize URLs and recrawl important pages first and more frequently.
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+</style>
+
+---
+
+# HTML Downloader
+Design deep dive
+
+
+The HTML Downloader downloads web pages from the internet using the HTTP protocol.
+
+- **Robots.txt**
+- **Performance optimization**
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+</style>
+
+---
+
+# Robots.txt
+HTML Downloader
+
+
+Called Robots Exclusion Protocol, is a standard used by websites to communicate with crawlers. **It specifies what pages crawlers are allowed to download**.
+
+👉 Before attempting to crawl a web site, a crawler should check its corresponding robots.txt first and follow its rules.
+
+
+```
+User-agent: Googlebot
+Disallow: /creatorhub/*
+Disallow: /rss/people/*/reviews
+Disallow: /gp/pdp/rss/*/reviews
+Disallow: /gp/cdp/member-reviews/
+Disallow: /gp/aw/cr/
+```
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+</style>
+
+---
+
+# Performance optimization
+HTML Downloader
+
+
+Below is a list of performance optimizations for HTML downloader:
+
+1. Distributed crawl
+2. Cache DNS Resolver
+3. Locality
+4. Short timeout
+
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+</style>
+
+
+---
+
+# Robustness
+Design deep dive
+
+
+A few approaches to improve the system robustness:
+
+- **Consistent hashing**: This helps to distribute loads among downloaders. A new downloader server can be added or removed using consistent hashing. Refer to Chapter 5: Design consistent hashing for more details.
+- **Save crawl states and data**: To guard against failures, crawl states and data are written to a storage system. A disrupted crawl can be restarted easily by loading saved states and data.
+- **Exception handling**: Errors are inevitable and common in a large-scale system. The
+crawler must handle exceptions gracefully without crashing the system.
+- **Data validation**: This is an important measure to prevent system errors.
+
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+</style>
+
+---
+
+# Extensibility
+Design deep dive
+
+
+As almost every system evolves, one of the design goals is to make the system flexible enough to support new content types. The crawler can be extended by plugging in new modules.
+
+For Example:
+
+- **PNG Downloader module** is plugged-in to download PNG files.
+- **Web Monitor module** is added to monitor the web and prevent copyright and trademark infringements.
+
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+</style>
+
+
+---
+
+# Detect and avoid problematic content
+Design deep dive
+
+1. **Redundant content**
+
+    As discussed previously, nearly 30% of the web pages are duplicates. Hashes or checksums help to detect duplication [11].
+
+
+2. **Spider traps**
+
+    A spider trap is a web page that causes a crawler in an infinite loop. For instance, an infinite deep directory structure is listed as follows: www.spidertrapexample.com/foo/bar/foo/bar/foo/bar/...
+
+3. **Data noise**
+
+    Some of the contents have little or no value, such as advertisements, code snippets, spam URLs, etc. Those contents are not useful for crawlers and should be excluded if possible.
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+</style>
+
+
+---
+layout: center
+class: text-center
+---
+
 # Q & A
 
 ---
