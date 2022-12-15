@@ -186,7 +186,7 @@ We should estimate the scale by taking many assumptions by discussing them with 
 - Assuming **1 billion** web pages to be crawled every month, we can estimate the average **QPS** to be: QPS (Query per Second) = 1,000,000,000 / 30 days / 24 hours / 3600 seconds ~ **400 pages per second**.
 - We can assume that the peak value of queries per second is 2 times the average, i.e., **800 pages per second**.
 - Now, assuming that, on average, a web page is 500 Kb in size, we can estimate storage required per month: 1-billion-page 500k = **500 TB storage per month**.
-- Also, assuming data are stored for **five years**, 500 TB _ 12 months _ 5 years = **30 PB**.
+- Also, assuming data are stored for **five years**, 500 TB * 12 months * 5 years = **30 PB**.
 
 <style>
 h1 {
